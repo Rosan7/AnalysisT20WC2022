@@ -1,1 +1,0 @@
-# AnalysisT20WC2022

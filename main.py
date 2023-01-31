@@ -43,7 +43,34 @@ for index, row in df.iterrows():
     else:
         arr.append("No Result")
 df["Result"] = arr
+@app.route('/signup',methods=['POST'])
+def signup():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        new_user = User(
+            name=name,
+            email=email,
+            password=password
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        return "User signed up successfully"
 
+
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email).first()
+        if user is not None and user.check_password(password):
+            login_user(user)
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid username or password')
+    return render_template('login.html')
 
 @app.route('/schedule')
 def schedule():
